@@ -2,9 +2,9 @@
 import requests
 import streamlit as st
 import pandas as pd
-from streamlit_lottie import st_lottie
-import numpy as np
-import json
+
+
+
 import time
 
 def local_css(file_name):
@@ -13,21 +13,20 @@ def local_css(file_name):
 local_css("style.css")
 htno=(st.text_input("Enter Hall Ticket Number")).upper()
 if st.button('Get Report'):
-    web=['Getting your results','Calculating','done']
+    response=requests.post("https://jntuhresults-web-four.vercel.app/api/academicresult?htno={}".format(htno))
+    response=response.json()
+    details=response['data']["Details"]
+    details_df=pd.DataFrame(columns=["Name","Hallticket","Code","Father Name"])
     with st.spinner('Getting your results'):
         time.sleep(1)
         with st.spinner('Calculating'):
             time.sleep(1)
-
+            with st.spinner('done'):
+                time.sleep(1)
         
 #htno="21UD1A0555"
-        response=requests.post(
-        "https://jntuhresults-web-four.vercel.app/api/academicresult?htno={}".format(htno))
-        response=response.json()
-        details=response['data']["Details"]
-        details_df=pd.DataFrame(columns=["Name","Hallticket","Code","Father Name"])
-        with st.spinner('Calculating'):
-            time.sleep(1)
+        
+            
         
         for i in range(len([details])):
             details_df.loc[i]=[details["NAME"],details["Roll_No"],details["COLLEGE_CODE"],details['FATHER_NAME']]
